@@ -2,10 +2,9 @@ html {
     scrollbar-width: none;/* hides firefox scrollbar*/
 }
     body{
-        color: blue;
         background-color:green;
-        font-family:Impact;
-        font-size: 2vmin;
+        font-family:arial;
+        font-size: 3vmin;
         margin: 0px;
         -ms-overflow-style: none;  /* hides scrollbar on IE and Edge */
         text-align:center;
