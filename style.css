@@ -51,7 +51,7 @@ display: none;/* hides scrolbar on chrome, safari, and opera*/
     color:#f71111;
     
 }
-#banner{
+.banner{
     position: fixed;
     width: 100vw;
     height: 4vmin;
