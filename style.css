@@ -54,7 +54,17 @@ display: none;/* hides scrolbar on chrome, safari, and opera*/
 #banner{
     position: fixed;
     width: 100vw;
-    height: 3vh;
+    height: 4vmin;
     background-color: white;
     z-index: 3;
+}
+#button{
+    position: relative;
+    left: 1.5vmin;
+    top:50%;
+    transform:translate(-50%,-50%);
+    width: 10vw;
+    height: 3.5vmin;
+    z-index: 4;
+    background-color: orangered;
 }
