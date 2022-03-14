@@ -55,18 +55,15 @@ display: none;/* hides scrolbar on chrome, safari, and opera*/
     position: fixed;
     width: 100vw;
     height: 4vmin;
-    background-color: white;
     z-index: 3;
 }
 #button{
-    position: relative;
-    left: 1.5vmin;
-    top:50%;
-    transform:translate(-50%,-50%);
-    width: 10vw;
+    left: 1%;
+    top:5%;
+    position: absolute;
+    padding: 0.1%;
     height: 3vmin;
     text-decoration: none;
-
     z-index: 4;
-    background-color: orangered;
+    background-color: #ff4500;
 }
