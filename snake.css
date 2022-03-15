@@ -1,18 +1,18 @@
-html {
-    scrollbar-width: none;/* hides firefox scrollbar*/
+html{
+    scrollbar-width: 0;
 }
 body{
-    font-family:arial;
-    font-size: 3vmin;
-    margin: 0px;
-    -ms-overflow-style: none;  /* hides scrollbar on IE and Edge */
-    text-align:center;
-    
+    margin:0px;
+    -ms-overflow-style: none;
 }
 body::-webkit-scrollbar {
-display: none;/* hides scrolbar on chrome, safari, and opera*/
+    display: none;/* hides scrolbar on chrome, safari, and opera*/
 }
 #game{
-    width:100vw;
-    height:100vw;
+    margin:0px;
+    left:50%;
+    top:50%;
+    transform: translate(50%,0%);
+    width: 60vw;
+    height:100vh;
 }
