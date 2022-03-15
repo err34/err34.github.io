@@ -67,3 +67,11 @@ display: none;/* hides scrolbar on chrome, safari, and opera*/
     z-index: 4;
     background-color: #ff4500;
 }
+#game{
+    margin:0px;
+    left:50%;
+    top:50%;
+    transform: translate(50%,0%);
+    width: 60vw;
+    height:100vh;
+}
