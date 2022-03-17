@@ -1,7 +1,7 @@
 function draw(){
     document.addEventListener("keydown", move);
     const image = document.getElementById('source');
-    setInterval(game, 1000/13);
+    setInterval(game, 1000/13);//run 13 times a sec
 }
 var xv = 0;
 var yv = 0;
@@ -15,9 +15,10 @@ var trail = 5;
 var tail = [{x: px, y: py},{x:9, y:10},{x:8, y:10}, {x: 7, y:10},{x:6,y:10}];
 var mult = 0;
 var skip = false;
+var good = true;
 var big = 0;
 function game(){
-    if(skip){
+    if(skip){//handles issues with input
         skip = false;
         return;
     }
@@ -37,11 +38,11 @@ function game(){
     }else if(py > tc-1){
         py = 0;
     }
-    ctx.drawImage(image, 0,0,canvas.width,canvas.height);
+    ctx.drawImage(image, 0,0,canvas.width,canvas.height);//draw background
     ctx.fillStyle = "#00f000";
     for(var i = 0; i< trail; i++){
-        ctx.fillRect(tail[i].x*mult,tail[i].y*mult,gs*2,gs*2);
-        if(tail[i].x ==px && tail[i].y == py){
+        ctx.fillRect(tail[i].x*mult,tail[i].y*mult,gs*2,gs*2);//draw tail
+        if(tail[i].x ==px && tail[i].y == py){//reset upon death
             ctx.drawImage(image, 0,0,canvas.width,canvas.height);
             ctx.fillStyle = "#00f000";
             ctx.fillRect(px*mult,py*mult,gs*2,gs*2);
@@ -60,9 +61,9 @@ function game(){
             ay = 10;
         }
     }
-    tail.push({x:px,y:py});
+    tail.push({x:px,y:py});//add current pos to front of snake
     while(tail.length>trail){
-        tail.shift();
+        tail.shift();//chop off end of snake
     }
     if(ax ==px && ay == py){
         trail++;
@@ -75,18 +76,20 @@ function game(){
                     ax = Math.floor(Math.random()*tc);
                     ay = Math.floor(Math.random()*tc);
                     break;
+                    good = false;
                 }
-            }
-            if(tail[i].x != ax && tail[i].y != ay){
+            } 
+            if(good){
                 break;
             }
         }
+        //logic for generating new apple if in tail
     }
-    ctx.fillStyle = "#ff0000";
+    ctx.fillStyle = "#ff0000";//draw apple
     ctx.fillRect(ax*mult,ay*mult,gs*2,gs*2);
     
 }
-function move(evt){
+function move(evt){//handles movement
     switch(evt.code){
         case "KeyA":
         case "ArrowLeft":
@@ -119,5 +122,5 @@ function move(evt){
             break;
     }
     game();
-    skip = true;
+    skip = true;//prevents moving multiple times a frame
 }
