@@ -61,13 +61,14 @@ function game(){
             ay = 10;
         }
     }
+    
     tail.push({x:px,y:py});//add current pos to front of snake
     while(tail.length>trail){
         tail.shift();//chop off end of snake
     }
-    if(ax ==px && ay == py){
+    if(ax ==px-xv && ay == py-yv){
         trail++;
-        tail[trail-1] = {x:tail[trail-2].x-xv,y:tail[trail-2].y-yv};
+        tail[trail-1] = {x:tail[trail-2].x,y:tail[trail-2].y};
         ax = Math.floor(Math.random()*tc);
         ay = Math.floor(Math.random()*tc);
         while(true){
