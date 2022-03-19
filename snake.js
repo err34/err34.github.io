@@ -1,7 +1,8 @@
+var speed = 1;
 function draw(){
     document.addEventListener("keydown", move);
     const image = document.getElementById('source');
-    setInterval(game, 1000/13);//run 13 times a sec
+    setInterval(game, 1000/speed);//run 13 times a sec
 }
 var xv = 0;
 var yv = 0;
@@ -26,6 +27,27 @@ function game(){
     var ctx = canvas.getContext('2d');
     mult = canvas.width / gs;
     var image = document.getElementById('source');
+    ctx.drawImage(image, 0,0,canvas.width,canvas.height);//draw background
+    if(ax ==px && ay == py){
+        trail++;
+        tail[trail-1] = {x:tail[trail-2].x,y:tail[trail-2].y};
+        ax = Math.floor(Math.random()*tc);
+        ay = Math.floor(Math.random()*tc);
+        while(true){
+            for(var i = 0; i< trail;i++){
+                if(tail[i].x == ax && tail[i].y == ay){
+                    ax = Math.floor(Math.random()*tc)-1;
+                    ay = Math.floor(Math.random()*tc)-1;
+                    good = false;
+                    break;
+                }
+            } 
+            if(good){
+                break;
+            }
+        }
+        //logic for generating new apple if in tail
+    }
     px+=xv;
     py+=yv;
     if(px<0){
@@ -38,7 +60,6 @@ function game(){
     }else if(py > tc-1){
         py = 0;
     }
-    ctx.drawImage(image, 0,0,canvas.width,canvas.height);//draw background
     ctx.fillStyle = "#00f000";
     for(var i = 0; i< trail; i++){
         ctx.fillRect(tail[i].x*mult,tail[i].y*mult,gs*2,gs*2);//draw tail
@@ -65,26 +86,6 @@ function game(){
     tail.push({x:px,y:py});//add current pos to front of snake
     while(tail.length>trail){
         tail.shift();//chop off end of snake
-    }
-    if(ax ==px-xv && ay == py-yv){
-        trail++;
-        tail[trail-1] = {x:tail[trail-2].x,y:tail[trail-2].y};
-        ax = Math.floor(Math.random()*tc);
-        ay = Math.floor(Math.random()*tc);
-        while(true){
-            for(var i = 0; i< trail;i++){
-                if(tail[i].x == ax && tail[i].y == ay){
-                    ax = Math.floor(Math.random()*tc);
-                    ay = Math.floor(Math.random()*tc);
-                    good = false;
-                    break;
-                }
-            } 
-            if(good){
-                break;
-            }
-        }
-        //logic for generating new apple if in tail
     }
     ctx.fillStyle = "#ff0000";//draw apple
     ctx.fillRect(ax*mult,ay*mult,gs*2,gs*2);
