@@ -75,8 +75,8 @@ function game(){
                 if(tail[i].x == ax && tail[i].y == ay){
                     ax = Math.floor(Math.random()*tc);
                     ay = Math.floor(Math.random()*tc);
-                    break;
                     good = false;
+                    break;
                 }
             } 
             if(good){

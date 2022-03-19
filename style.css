@@ -71,8 +71,8 @@ display: none;/* hides scrolbar on chrome, safari, and opera*/
     margin:0px;
     left:50%;
     top:50%;
-    width: 60vw;
-    height:100vh;
+    width: 100vmin;
+    height:100vmin;
 }
 #score{
     position: absolute;
