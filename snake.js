@@ -36,8 +36,8 @@ function game(){
         while(true){
             for(var i = 0; i< trail;i++){
                 if(tail[i].x == ax && tail[i].y == ay){
-                    ax = Math.floor(Math.random()*tc)-1;
-                    ay = Math.floor(Math.random()*tc)-1;
+                    ax = Math.floor(Math.random()*tc);
+                    ay = Math.floor(Math.random()*tc);
                     good = false;
                     break;
                 }
