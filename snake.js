@@ -1,4 +1,4 @@
-var speed = 1;
+var speed = 13;
 function draw(){
     document.addEventListener("keydown", move);
     const image = document.getElementById('source');
@@ -82,7 +82,6 @@ function game(){
             ay = 10;
         }
     }
-    
     tail.push({x:px,y:py});//add current pos to front of snake
     while(tail.length>trail){
         tail.shift();//chop off end of snake
