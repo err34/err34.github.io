@@ -13,10 +13,11 @@ var ay = 10
 var gs = 20;
 var tc = 20;
 var trail = 5;
-var tail = [{x: px, y: py},{x:9, y:10},{x:8, y:10}, {x: 7, y:10},{x:6,y:10}];
+var tail = [{x: px, y: py},{x: px, y: py},{x: px, y: py},{x: px, y: py},{x: px, y: py}];
 var mult = 0;
 var skip = false;
-var good = true;
+var good = [];
+var bad = false;
 var big = 0;
 function game(){
     if(skip){//handles issues with input
@@ -28,24 +29,26 @@ function game(){
     mult = canvas.width / gs;
     var image = document.getElementById('source');
     ctx.drawImage(image, 0,0,canvas.width,canvas.height);//draw background
+    good = [];
+    for(var i = 0; i<gs;i++){
+        for(var j = 0; j< gs;j++){
+            for(var k = 0; k< tail.length;k++){
+                if(tail[k].x ==i && tail[k].y == j){
+                    bad = true;
+                }
+            }
+            if(!bad){
+                good.push({x:i,y:j});
+            }
+            bad = false;
+        }
+    }
     if(ax ==px && ay == py){
         trail++;
         tail[trail-1] = {x:tail[trail-2].x,y:tail[trail-2].y};
-        ax = Math.floor(Math.random()*tc);
-        ay = Math.floor(Math.random()*tc);
-        while(true){
-            for(var i = 0; i< trail;i++){
-                if(tail[i].x == ax && tail[i].y == ay){
-                    ax = Math.floor(Math.random()*tc);
-                    ay = Math.floor(Math.random()*tc);
-                    good = false;
-                    break;
-                }
-            } 
-            if(good){
-                break;
-            }
-        }
+        var rand = Math.floor(Math.random()*good.length);
+        ax = good[rand].x;
+        ay = good[rand].y;
         //logic for generating new apple if in tail
     }
     px+=xv;
@@ -72,7 +75,7 @@ function game(){
                 var high = document.getElementById("score");
                 high.innerHTML = "High Score: " + big;
             }
-            
+            tail = [{x: px, y: py},{x: px, y: py},{x: px, y: py},{x: px, y: py},{x: px, y: py}];
             trail = 5;
             xv = 0;
             yv = 0;
