@@ -68,7 +68,10 @@ display: none;/* hides scrolbar on chrome, safari, and opera*/
     background-color: #ff4500;
 }
 #container{
+    height: 100vh;
+    width: 100vw;
     display:flex;
+    flex-wrap: wrap;
     flex-direction: row;
     justify-content:space-around;
     align-items:center;
