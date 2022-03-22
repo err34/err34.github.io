@@ -67,15 +67,22 @@ display: none;/* hides scrolbar on chrome, safari, and opera*/
     z-index: 4;
     background-color: #ff4500;
 }
+#container{
+    display:flex;
+    flex-direction: row;
+    justify-content:space-around;
+    align-items:center;
+    align-content:stretch;
+    font-family:courier new;
+}
+
 #game{
-    margin:0px;
-    left:50%;
-    top:50%;
     width: 100vmin;
     height:100vmin;
 }
 #score{
-    position: absolute;
-    top:0;
-    left: 80%;
+    z-index:1;
+}
+#current{
+    z-index:1;
 }

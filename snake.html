@@ -6,10 +6,11 @@
     </head>
     <body onload="draw();">
         <img id = "source" src = "images/Desktop 4k_08.jpg"width = "1600" height="900" style="display: none;">
-        <canvas id = "game" width = "900" height="900">
-        </canvas>
-        <p id="score">
-            No high score yet!
-        </p>
+        <div id="container">
+            <p id="current">Score: 5</p>
+            <canvas id="game" width="1000" height="1000">
+            </canvas>
+            <p id="score">High Score: 5</p>
+        </div>
     </body>
 </html>
