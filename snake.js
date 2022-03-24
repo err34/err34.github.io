@@ -74,7 +74,7 @@ function game(){
         return;
     }
     if(!paused){
-        speed = 13
+        speed = 13;
     }
     canvas = document.getElementById("game");
     ctx = canvas.getContext('2d');
@@ -143,46 +143,44 @@ function move(evt){//handles movement
     wall();
     switch(evt.code){
         case "KeyA":
-        case "ArrowLeft":
-            
-            if(xv!=1 && !paused){
-                xv = -1;
-                yv = 0;
-            }
-            break;
-        case "KeyW":
-        case "ArrowUp":
-            if(yv!=1 && !paused){
-                xv = 0;
-                yv = -1;
-            }
-            
-            break;
-        case "KeyD":
-        case "ArrowRight":
-            if(xv!=-1 && !paused){
+            case "ArrowLeft":
+                
+                if(xv!=1 && !paused){
+                    xv = -1;
+                    yv = 0;
+                }
+                break;
+                case "KeyW":
+                    case "ArrowUp":
+                        if(yv!=1 && !paused){
+                            xv = 0;
+                            yv = -1;
+                        }
+                        
+                        break;
+                        case "KeyD":
+                            case "ArrowRight":
+                                if(xv!=-1 && !paused){
                 xv = 1;
                 yv = 0;
             }
             break;
-        case "KeyS":
-        case "ArrowDown":
-            if(yv!=-1 && !paused){
-                xv = 0;
-                yv = 1;
-            }
-            break;
+            case "KeyS":
+                case "ArrowDown":
+                    if(yv!=-1 && !paused){
+                        xv = 0;
+                        yv = 1;
+                    }
+                    break;
         case "Escape":
-        case "KeyP":
-            if(!paused){
-                generateButton();
+            case "KeyP":
+                if(!paused){
+                    generateButton();
                 paused = true;
             }else{
                 paused = false;
             }
-    }
+        }
     game();//prevents multiple movements per frame
     skip = true;
-    
-    
 }
