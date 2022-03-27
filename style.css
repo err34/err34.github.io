@@ -27,6 +27,8 @@ a{
     
 }a:visited{
     color:black;
+}#home{
+    overflow:hidden;
 }
 #box{
     width:100vw;
@@ -36,8 +38,11 @@ a{
     align-content:center;
     height:87vh;
     flex-wrap:wrap;
+    
 }
 #clink{
+    box-sizing: border-box;
+    border-radius:2vmin;
     width: 64vmin;
     height:36vmin;
     z-index:1;/*displays on top of other things*/
@@ -46,7 +51,7 @@ a{
 }
 #clink:hover{
     z-index:500;
-    transform: scale(1.25);
+    transform: scale(1.1);
     box-shadow:0 0 1vmin 0.5vmin #351585;
     
 }
@@ -79,7 +84,7 @@ a{
 #snake{
     background-color:#152d85;
     color: white;
-    
+    cursor:none;
 }
 #container{
     height: 100vh;
@@ -98,6 +103,7 @@ a{
     width: 90vmin;
     box-shadow: 0 0 10vmin 0.2vmin #000;
 }
+
 #score{
     z-index:1;
 }
