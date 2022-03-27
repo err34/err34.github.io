@@ -155,12 +155,12 @@ function game(){
 }
 function tMove(evt){
     var endX,endY,angle;
-    var startX =  evt.x;
-    var startY = evt.y;
+    var startX =  evt.touchs[0].clientX;
+    var startY = evt.touches[0].clientY;
     var isHolding = true;
     while(isHolding){
-        endX = Touch.clientX;
-        endY = Touch.clientY;
+        endX = evt.touches[0].clientX;
+        endY = evt.touches[0].clientY;
         if(ontouchend){
             isHolding = false;
         }
