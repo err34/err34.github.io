@@ -1,6 +1,7 @@
 function draw(){
     document.addEventListener("keydown", move);
     document.addEventListener("touchstart", tMove);
+    document.addEventListener("touchend", realTMove);
     setTimeout(game, 1000/speed);//run 13 times a sec
 }
 var pause ={
@@ -154,17 +155,12 @@ function game(){
     
 }
 function tMove(evt){
-    var endX,endY,angle;
-    var startX =  evt.touchs[0].clientX;
-    var startY = evt.touches[0].clientY;
-    var isHolding = true;
-    while(isHolding){
-        endX = evt.touches[0].clientX;
-        endY = evt.touches[0].clientY;
-        if(ontouchend){
-            isHolding = false;
-        }
-    }
+    startX =  evt.touchs[0].clientX;
+    startY = evt.touches[0].clientY;
+}
+function realTMove(evt){
+    endX = evt.touches[0].clientX;
+    endY = evt.touches[0].clientY;
     var vx = endX - startX;
     var vy = endY - startY;
     angle = Math.trunc(Math.atan(vy/vx));
@@ -191,6 +187,8 @@ function tMove(evt){
             yv = 1;
         }
     }
+    game();
+    skip = true;
 }
 function move(evt){//handles movement
     wall();
