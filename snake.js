@@ -1,7 +1,5 @@
 function draw(){
     document.addEventListener("keydown", move);
-    document.addEventListener("touchstart", tMove);
-    document.addEventListener("touchend", realTMove);
     setTimeout(game, 1000/speed);//run 13 times a sec
 }
 var pause ={
@@ -11,7 +9,7 @@ var pause ={
     yv:0
 }
 function generateButton(){
-    var ang = Math.trunc(Math.random()*360);
+    var ang = Math.floor(Math.random()*360);
     pause.x = 450;
     pause.y = 425;
     pause.xv = 10*Math.cos(ang);
@@ -19,22 +17,24 @@ function generateButton(){
 }
 var xv = 0;
 var yv = 0;
+var vels = [{xv:0,yv:0}];
 var gs = 20;
-var speed = gs/5;
-var px = Math.trunc(gs/3);
-var py = Math.trunc(gs/2);
-var ax = Math.trunc(2*gs/3);
-var ay = Math.trunc(gs/2);
-var trail = 5;
-var tail = [{x: px, y: py},{x: px, y: py},{x: px, y: py},{x: px, y: py},{x: px, y: py}];
-var mult = 0;
-var skip = false;
+var speed = gs/2.5;
+var px = Math.floor(gs/3);
+var py = Math.floor(gs/2);
+var ax = Math.floor(2*gs/3);
+var ay = Math.floor(gs/2);
+var trail = 4;
+var tail = [{x: px, y: py},{x: px, y: py},{x: px, y: py},{x: px, y: py}];
+var mult = 1000/gs;
 var good = [];
 var bad = false;
 var big = 0;
 var paused = false;
+var PUPIL_SIZE = mult/6;
+var EYE_SIZE = mult/4;
 function reset(){
-    drawBack(ctx);;
+    drawBack(ctx);
     ctx.fillStyle = "#00f000";
     ctx.fillRect(px*mult+(mult/40),py*mult+(mult/40),mult - mult/20,mult-mult/20);
     if(trail>big){
@@ -42,14 +42,15 @@ function reset(){
         var high = document.getElementById("score");
         high.innerHTML = "High Score: " + big;
     }
-    tail = [{x: px, y: py},{x: px, y: py},{x: px, y: py},{x: px, y: py},{x: px, y: py}];
-    trail = 5;
+    tail = [{x: px, y: py},{x: px, y: py},{x: px, y: py},{x: px, y: py}];
+    trail = 4;
     xv = 0;
     yv = 0;
-    px = Math.trunc(gs/3);
-    py = Math.trunc(gs/2);
-    ax = Math.trunc(2*gs/3);
-    ay = Math.trunc(gs/2);
+    vels = [{xv:0,yv:0}];
+    px = Math.floor(gs/3);
+    py = Math.floor(gs/2);
+    ax = Math.floor(2*gs/3);
+    ay = Math.floor(gs/2);
 }
 function wall(){
     if(px+xv<-1){           //wall will kill you
@@ -83,18 +84,9 @@ function drawBack(ctx){
     }
 }
 function game(){
-    
-    if(skip){//handles issues with input
-        skip = false;
-        return;
-    }
-    if(!paused){
-        speed = 13
-    }
     canvas = document.getElementById("game");
     ctx = canvas.getContext('2d');
     mult = canvas.width / gs;
-    image = document.getElementById('source');
     drawBack(ctx);;//draw background
     good = [];
     for(var i = 0; i<gs;i++){//create a lookup table of valid positions for an apple
@@ -115,25 +107,39 @@ function game(){
         return;
     }
     if(!paused){//pnly move if not paused
+        if(vels.length>0){
+            xv = vels[0].xv;
+            yv = vels[0].yv;
+            vels.shift();
+        }
         px+=xv;
         py+=yv;
     }
     if(ax == px && ay == py){//handles eating and generating apples
         trail++;
         tail[trail-1] = {x:tail[trail-2].x,y:tail[trail-2].y};
-        var rand = Math.trunc(Math.random()*good.length);
+        var rand = Math.floor(Math.random()*good.length);
         ax = good[rand].x;
         ay = good[rand].y;
     }
     ctx.fillStyle = "#00ff00";
-    for(var i = 0; i< trail; i++){
+    ctx.fillRect(px*mult+(mult/40),py*mult+(mult/40),mult-mult/20,mult-mult/20);
+    ctx.fillRect((px-xv/2)*mult+(mult/40),(py-yv/2)*mult+(mult/40),mult-mult/20,mult-mult/20);
+    for(var i = 1; i< trail-1; i++){
+        var xoff =  tail[i+1].x - tail[i].x;
+        var yoff = tail[i+1].y - tail[i].y;
+        xoff/=2;
+        yoff/=2;
+        ctx.fillRect((tail[i].x+xoff)*mult+mult/40,(tail[i].y+yoff)*mult+(mult/40), mult-mult/20,mult-mult/20);
         ctx.fillRect(tail[i].x*mult + (mult/40),tail[i].y*mult + (mult/40),mult - mult/20,mult-mult/20);//draw tail
         if(!paused){
-            if(tail[i].x ==px && tail[i].y == py){//reset upon death
+            if(tail[i].x ==px && tail[i].y == py && trail>4){//reset upon death
                 reset();
             }
         }
     }
+    ctx.fillRect(tail[trail-1].x*mult+(mult/40),tail[trail-1].y*mult+(mult/40),mult-mult/20,mult-mult/20);
+    drawEyes();
     if(!paused){
         tail.push({x:px,y:py});//add current pos to front of snake
         while(tail.length>trail){
@@ -154,73 +160,85 @@ function game(){
     curr.innerHTML = "Score: "+ tail.length;//update score
     
 }
-function tMove(evt){
-    startX =  evt.touchs[0].clientX;
-    startY = evt.touches[0].clientY;
-}
-function realTMove(evt){
-    endX = evt.touches[0].clientX;
-    endY = evt.touches[0].clientY;
-    var vx = endX - startX;
-    var vy = endY - startY;
-    angle = Math.trunc(Math.atan(vy/vx));
-    if(angle>=315||angle<45){
-        if(xv!=-1 && !paused){
-            xv = 1;
-            yv = 0;
+function drawEyes(){
+    ctx.fillStyle = "#ffffff";
+    if(Math.abs(yv)>0){
+        if(yv<0){
+            ctx.fillRect((px+0.1)*mult+mult/40,(py+0.5)*mult+mult/40,EYE_SIZE,EYE_SIZE);
+            ctx.fillRect((px+0.6)*mult+mult/40,(py+0.5)*mult+mult/40,EYE_SIZE,EYE_SIZE);
+            ctx.fillStyle = "#000000";
+            ctx.fillRect((px+0.1)*mult+mult/40,(py+0.5)*mult+mult/40,PUPIL_SIZE,PUPIL_SIZE);
+            ctx.fillRect((px+0.6)*mult+mult/40,(py+0.5)*mult+mult/40,PUPIL_SIZE,PUPIL_SIZE);
+        }
+        else{
+            ctx.fillRect((px+0.1)*mult+mult/40,(py+0.5)*mult+mult/40,EYE_SIZE,EYE_SIZE);
+            ctx.fillRect((px+0.6)*mult+mult/40,(py+0.5)*mult+mult/40,EYE_SIZE,EYE_SIZE);
+            ctx.fillStyle = "#000000";
+            ctx.fillRect((px+0.1)*mult+mult/40,(py+0.5)*mult+mult/40,PUPIL_SIZE,PUPIL_SIZE);
+            ctx.fillRect((px+0.6)*mult+mult/40,(py+0.5)*mult+mult/40,PUPIL_SIZE,PUPIL_SIZE);
+            
+        }
+    }else{
+        if(xv<0){
+            ctx.fillRect((px+0.5)*mult+mult/40,(py+0.1)*mult+mult/40,EYE_SIZE,EYE_SIZE);
+            ctx.fillRect((px+0.5)*mult+mult/40,(py+0.6)*mult+mult/40,EYE_SIZE,EYE_SIZE);
+            ctx.fillStyle = "#000000";
+            ctx.fillRect((px+0.5)*mult+mult/40,(py+0.1)*mult+mult/40,PUPIL_SIZE,PUPIL_SIZE);
+            ctx.fillRect((px+0.5)*mult+mult/40,(py+0.6)*mult+mult/40,PUPIL_SIZE,PUPIL_SIZE);
+        }else{
+            ctx.fillRect((px+0.5)*mult+mult/40,(py+0.1)*mult+mult/40,EYE_SIZE,EYE_SIZE);
+            ctx.fillRect((px+0.5)*mult+mult/40,(py+0.6)*mult+mult/40,EYE_SIZE,EYE_SIZE);
+            ctx.fillStyle = "#000000";
+            ctx.fillRect((px+0.5)*mult+mult/40,(py+0.1)*mult+mult/40,PUPIL_SIZE,PUPIL_SIZE);
+            ctx.fillRect((px+0.5)*mult+mult/40,(py+0.6)*mult+mult/40,PUPIL_SIZE,PUPIL_SIZE);
         }
     }
-    else if(angle>=45&&angle<135){
-        if(yv!=1 && !paused){
-            xv = 0;
-            yv = -1;
-        }
-    }
-    else if(angle>=135 && angle < 225){
-        if(xv!=1 && !paused){
-            xv = -1;
-            yv = 0;
-        }
-    }else if(angle >= 225&&angle<315){
-        if(yv!=-1 && !paused){
-            xv = 0;
-            yv = 1;
-        }
-    }
-    game();
-    skip = true;
 }
 function move(evt){//handles movement
     wall();
     switch(evt.code){
         case "KeyA":
         case "ArrowLeft":
-            
-            if(xv!=1 && !paused){
-                xv = -1;
-                yv = 0;
+            if(vels.length>0){
+                if(!paused && vels[vels.length-1].xv != 1){
+                    vels.push({xv:-1,yv:0});
+                }
+            }
+            else if(xv!= 1 && !paused){
+                vels.push({xv:-1,yv:0});
             }
             break;
         case "KeyW":
         case "ArrowUp":
-            if(yv!=1 && !paused){
-                xv = 0;
-                yv = -1;
+            if(vels.length>0){
+                if(!paused&& vels[vels.length-1].yv != 1){
+                    vels.push({xv:0,yv:-1});
+                }
+            }
+            else if(yv!=1 && !paused){
+                vels.push({xv:0,yv:-1});
             }
             
             break;
         case "KeyD":
         case "ArrowRight":
-            if(xv!=-1 && !paused){
-                xv = 1;
-                yv = 0;
+            if(vels.length>0){
+                if(!paused && vels[vels.length-1].xv != -1){
+                    vels.push({xv:1,yv:0});
+                }
+            }
+            else if(xv!= -1 && !paused){
+                vels.push({xv:1,yv:0});
             }
             break;
         case "KeyS":
         case "ArrowDown":
-            if(yv!=-1 && !paused){
-                xv = 0;
-                yv = 1;
+            if(vels.length>0){
+                if(!paused & vels[vels.length-1].yv != -1){
+                    vels.push({xv:0,yv:1});
+                }
+            }else if(yv!= -1 && !paused){
+                vels.push({xv:0, yv: 1});
             }
             break;
         case "Escape":
@@ -231,9 +249,7 @@ function move(evt){//handles movement
             }else{
                 paused = false;
             }
+            break;
     }
-    game();//prevents multiple movements per frame
-    skip = true;
-    
     
 }
