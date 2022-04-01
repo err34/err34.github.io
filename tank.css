@@ -1,0 +1,28 @@
+#container{
+    width:100vmin;
+    height:100vmin;
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+}
+#game{
+    width:100vmin;
+    height:100vmin;
+    box-shadow: 0 0 10vmin 0.2vmin #000;
+}
+html {
+    scrollbar-width: none;/* hides firefox scrollbar*/
+}
+body{
+    background-color:#156585;
+    font-family:arial;
+    font-size: 3vmin;
+    margin: 0px;
+    -ms-overflow-style: none;  /* hides scrollbar on IE and Edge */
+    text-align:center;
+    
+}
+body::-webkit-scrollbar {
+display: none;/* hides scrolbar on chrome, safari, and opera*/
+}

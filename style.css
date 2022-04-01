@@ -27,8 +27,6 @@ a{
     
 }a:visited{
     color:black;
-}#home{
-    overflow:hidden;
 }
 #box{
     width:100vw;
@@ -38,7 +36,6 @@ a{
     align-content:center;
     height:87vh;
     flex-wrap:wrap;
-    
 }
 #clink{
     box-sizing: border-box;
@@ -72,19 +69,16 @@ a{
     z-index: 3;
 }
 #button{
-    left: 1%;
-    top:5%;
-    position: absolute;
-    padding: 0.1%;
-    height: 3vmin;
-    text-decoration: none;
-    z-index: 4;
-    background-color: #ff4500;
+    background-color: #222222;
+    color: #eeeeee;
+    transition: transform 1s;
+}
+#button:hover{
+    transform:scale(1.1);
 }
 #snake{
     background-color:#152d85;
     color: white;
-    cursor:none;
 }
 #container{
     height: 100vh;
@@ -98,10 +92,10 @@ a{
     font-family:courier new;
 }
 #game{
-    cursor:none;
     height: 90vmin;
     width: 90vmin;
     box-shadow: 0 0 10vmin 0.2vmin #000;
+    cursor:none;
 }
 
 #score{

@@ -1,6 +1,11 @@
 function draw(){
     document.addEventListener("keydown", move);
     setTimeout(game, 1000/speed);//run 13 times a sec
+    var high = document.getElementById("score")
+    if(getCookie("big")!= ""){
+        high.innerText = "High Score: " + getCookie("big");
+    }
+    
 }
 var pause ={
     x:500,
@@ -15,17 +20,25 @@ function generateButton(){
     pause.xv = 10*Math.cos(ang);
     pause.yv = 10*Math.sin(ang);
 }
+function clearCookies(){
+    document.cookie = "big=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    var high = document.getElementById("score");
+    high.innerText = "No High Score!";
+    big = 0;
+}
+var init = true;
 var xv = 0;
 var yv = 0;
 var vels = [{xv:0,yv:0}];
-var gs = 20;
+var gs = 16;
 var speed = gs/2.5;
+var deep = 0;
 var px = Math.floor(gs/3);
 var py = Math.floor(gs/2);
 var ax = Math.floor(2*gs/3);
 var ay = Math.floor(gs/2);
-var trail = 4;
-var tail = [{x: px, y: py},{x: px, y: py},{x: px, y: py},{x: px, y: py}];
+var trail = 5;
+var tail = [{x: px, y: py},{x: px, y: py},{x: px, y: py},{x: px, y: py},{x: px, y: py}];
 var mult = 1000/gs;
 var good = [];
 var bad = false;
@@ -33,17 +46,37 @@ var big = 0;
 var paused = false;
 var PUPIL_SIZE = mult/6;
 var EYE_SIZE = mult/4;
+function getCookie(cname) {
+  let name = cname + "=";
+  let decodedCookie = decodeURIComponent(document.cookie);
+  let ca = decodedCookie.split(';');
+  for(let i = 0; i <ca.length; i++) {
+    let c = ca[i];
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return "";
+}
 function reset(){
+    if(tail.length== 5){
+        window.location.href = "cry.html";
+    }
     drawBack(ctx);
     ctx.fillStyle = "#00f000";
     ctx.fillRect(px*mult+(mult/40),py*mult+(mult/40),mult - mult/20,mult-mult/20);
-    if(trail>big){
+    let highest = getCookie("big");
+    if(trail>big && trail > highest){
         big = trail;
-        var high = document.getElementById("score");
+        var high = document.getElementById("score")
+        document.cookie = "big = "+big;
         high.innerHTML = "High Score: " + big;
     }
-    tail = [{x: px, y: py},{x: px, y: py},{x: px, y: py},{x: px, y: py}];
-    trail = 4;
+    tail = [{x: px, y: py},{x: px, y: py},{x: px, y: py},{x: px, y: py},{x: px, y: py}];
+    trail = 5;
     xv = 0;
     yv = 0;
     vels = [{xv:0,yv:0}];
@@ -51,6 +84,7 @@ function reset(){
     py = Math.floor(gs/2);
     ax = Math.floor(2*gs/3);
     ay = Math.floor(gs/2);
+    init = true;
 }
 function wall(){
     if(px+xv<-1){           //wall will kill you
@@ -122,7 +156,7 @@ function game(){
         ax = good[rand].x;
         ay = good[rand].y;
     }
-    ctx.fillStyle = "#00ff00";
+    ctx.fillStyle = "#48a635";
     ctx.fillRect(px*mult+(mult/40),py*mult+(mult/40),mult-mult/20,mult-mult/20);
     ctx.fillRect((px-xv/2)*mult+(mult/40),(py-yv/2)*mult+(mult/40),mult-mult/20,mult-mult/20);
     for(var i = 1; i< trail-1; i++){
@@ -133,7 +167,7 @@ function game(){
         ctx.fillRect((tail[i].x+xoff)*mult+mult/40,(tail[i].y+yoff)*mult+(mult/40), mult-mult/20,mult-mult/20);
         ctx.fillRect(tail[i].x*mult + (mult/40),tail[i].y*mult + (mult/40),mult - mult/20,mult-mult/20);//draw tail
         if(!paused){
-            if(tail[i].x ==px && tail[i].y == py && trail>4){//reset upon death
+            if(tail[i].x ==px && tail[i].y == py && !init){//reset upon death
                 reset();
             }
         }
@@ -147,7 +181,7 @@ function game(){
         }
     }
     ctx.fillStyle = "#ff0000";//draw apple
-    ctx.fillRect(ax*mult+ (mult/40),ay*mult + (mult/40),mult-mult/20,mult-mult/20);
+    ctx.fillRect(ax*mult+mult/40, ay*mult+mult/40,mult-mult/20,mult-mult/20);
     if(paused){
         ctx.fillStyle = "#ffffff";
         ctx.fillRect(pause.x-20, pause.y, 50, 175);
@@ -158,7 +192,10 @@ function game(){
     
     var curr = document.getElementById('current');
     curr.innerHTML = "Score: "+ tail.length;//update score
-    
+    if(xv!=0 || yv!=0){
+        init = false;
+    }
+    deep++;
 }
 function drawEyes(){
     ctx.fillStyle = "#ffffff";
@@ -199,46 +236,53 @@ function move(evt){//handles movement
     switch(evt.code){
         case "KeyA":
         case "ArrowLeft":
-            if(vels.length>0){
-                if(!paused && vels[vels.length-1].xv != 1){
+            if(vels.length < 4){
+                if(vels.length>0){
+                    if(!paused && vels[vels.length-1].xv != 1){
+                        vels.push({xv:-1,yv:0});
+                    }
+                }
+                else if(xv!= 1 && !paused){
                     vels.push({xv:-1,yv:0});
                 }
-            }
-            else if(xv!= 1 && !paused){
-                vels.push({xv:-1,yv:0});
             }
             break;
         case "KeyW":
         case "ArrowUp":
-            if(vels.length>0){
-                if(!paused&& vels[vels.length-1].yv != 1){
+            if(vels.length<4){
+                if(vels.length>0){
+                    if(!paused&& vels[vels.length-1].yv != 1){
+                        vels.push({xv:0,yv:-1});
+                    }
+                }
+                else if(yv!=1 && !paused){
                     vels.push({xv:0,yv:-1});
                 }
             }
-            else if(yv!=1 && !paused){
-                vels.push({xv:0,yv:-1});
-            }
-            
             break;
         case "KeyD":
         case "ArrowRight":
-            if(vels.length>0){
-                if(!paused && vels[vels.length-1].xv != -1){
+            if(vels.length<4){
+                if(vels.length>0){
+                    if(!paused && vels[vels.length-1].xv != -1){
+                        vels.push({xv:1,yv:0});
+                    }
+                }
+                else if(xv!= -1 && !paused){
                     vels.push({xv:1,yv:0});
                 }
-            }
-            else if(xv!= -1 && !paused){
-                vels.push({xv:1,yv:0});
             }
             break;
         case "KeyS":
         case "ArrowDown":
-            if(vels.length>0){
-                if(!paused & vels[vels.length-1].yv != -1){
-                    vels.push({xv:0,yv:1});
+            if(vels.length<4){
+                if(vels.length>0){
+                    if(!paused & vels[vels.length-1].yv != -1){
+                        vels.push({xv:0,yv:1});
+                    }
+                }else if(yv!= -1 && !paused){
+                    vels.push({xv:0, yv: 1});
                 }
-            }else if(yv!= -1 && !paused){
-                vels.push({xv:0, yv: 1});
             }
             break;
         case "Escape":

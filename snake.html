@@ -3,14 +3,23 @@
     <head>
         <script src = "snake.js"></script>
         <link rel = "stylesheet" type = "text/css" href = "style.css">
+        <title>
+            Snake
+        </title>
     </head>
     <body onload="draw();" id = "snake">
-        <img id = "source" src = "images/Desktop 4k_08.jpg"width = "1600" height="900" style="display: none;">
-        <div id="container">
-            <p id="current">Score: 5</p>
-            <canvas id="game" width="1000" height="1000">
+        <div id = "container">
+            <p id = "current">
+                Score: 0
+            </p>
+            <canvas id = "game" width = "1000" height="1000">
             </canvas>
-            <p id="score">High Score: 5</p>
+            <div>
+                <p id = "score">
+                    No high score yet!
+                </p>
+                <button id = "button" type = "button" onclick = "clearCookies();">Clear High Score</button>
+            </div>
         </div>
     </body>
 </html>
