@@ -1,28 +1,39 @@
 #container{
-    width:100vmin;
-    height:100vmin;
-    position:absolute;
-    top:50%;
-    left:50%;
-    transform:translate(-50%,-50%);
+    width:100vw;
+    height:100vh;
+    display: flex;
+    flex-wrap:wrap;
+    justify-content:space-around;
+    align-items:center;
+    align-content:center;
 }
 #game{
     width:100vmin;
     height:100vmin;
     box-shadow: 0 0 10vmin 0.2vmin #000;
+    /* cursor:none; */
 }
+
 html {
     scrollbar-width: none;/* hides firefox scrollbar*/
 }
 body{
     background-color:#156585;
     font-family:arial;
+    color: white;
+    font-family: courier;
     font-size: 3vmin;
     margin: 0px;
     -ms-overflow-style: none;  /* hides scrollbar on IE and Edge */
     text-align:center;
+    -webkit-touch-callout: none;
+      -webkit-user-select: none;
+       -khtml-user-select: none;
+         -moz-user-select: none;
+          -ms-user-select: none;
+              user-select: none;
     
 }
 body::-webkit-scrollbar {
-display: none;/* hides scrolbar on chrome, safari, and opera*/
+    display: none;/* hides scrolbar on chrome, safari, and opera*/
 }
