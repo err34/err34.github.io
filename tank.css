@@ -11,9 +11,17 @@
     width:100vmin;
     height:100vmin;
     box-shadow: 0 0 10vmin 0.2vmin #000;
-    /* cursor:none; */
+    cursor:none;
 }
-
+#gamer{
+    position: absolute;
+    width: 5vmin;
+    height: 5vmin;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    z-index: 2;
+}
 html {
     scrollbar-width: none;/* hides firefox scrollbar*/
 }
