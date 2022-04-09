@@ -26,8 +26,8 @@ html {
     scrollbar-width: none;/* hides firefox scrollbar*/
 }
 body{
-    background-color:#156585;
     font-family:arial;
+    background-color:#152d85;
     color: white;
     font-family: courier;
     font-size: 3vmin;
