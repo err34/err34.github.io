@@ -97,7 +97,7 @@ function gameTick(){
     drawTank(tank.x,tank.y,tank.width,tank.height);
     tank.x += tank.xv;
     tank.x = tank.x%width;
-    if(tank.x-tank.width<0){
+    if(tank.x-tank.width<0){//screen wrap code until !]
         drawTank(tank.x+width,tank.y,tank.width,tank.height);
     }
     if(tank.x<0){
@@ -126,10 +126,10 @@ function gameTick(){
         tank.ang-=Math.PI*2;
     }else if(tank.ang < 0){
         tank.ang += Math.PI*2;
-    }
+    }//!]
     // console.log(tank.ang);
     pMove();
-    cooldown--;
+    cooldown--;//timer for bullets
     drawCross();
     var mang = Math.atan2(tank.xv,tank.yv);
     if (mang < 0){
@@ -164,7 +164,7 @@ function gameTick(){
         }
     }*/
     turnTank();
-    setTimeout(gameTick, 1000/speed);
+    setTimeout(gameTick, 1000/speed);//waits until next frame
 }
 function turnTank(){
     var nang = Math.atan2(mx-(tank.x+tank.width/2),my-(tank.y+tank.height/2)); //calc ang to mouse
@@ -221,7 +221,7 @@ function drawTank(x,y,wide,tall){
     }
     ctx.restore();
 }
-function bulletMove(){
+function bulletMove(){//updates all bullets in array
     for(var i = 0; i< bullets.length; i++){
         bullets[i].x += bullets[i].xv;
         bullets[i].y += bullets[i].yv;
@@ -237,23 +237,23 @@ function bulletMove(){
     ctx.fillStyle = "#000000";
 }
 function shoot(){
-    for(var i = 0; i< tank.rate; i++){
+    for(var i = 0; i< tank.rate; i++){//fire a certain amount of bullets
         var ang = tank.ang;
-        if(tank.rand == true){
+        if(tank.rand == true){//set offset
             var off = tank.offset*Math.random() - tank.offset/2;
         }
-        else{
+        else{//set offset if not randomized
             var off = ((i+1/2)*(tank.offset/tank.rate))-tank.offset /2;
         }
-        var xspeed = tank.soffset*Math.random() - tank.soffset/2;
+        var xspeed = tank.soffset*Math.random() - tank.soffset/2;//calculate bullet speed
         var yspeed = tank.soffset*Math.random() - tank.soffset/2;
         off*= (Math.PI/180);
         ang += off;
-        var xv = tank.mag*Math.cos(tank.ang);
+        var xv = tank.mag*Math.cos(tank.ang);//calculate tank velocity
         var yv = tank.mag*Math.sin(tank.ang);
-        var bxv = bullSped*Math.cos(ang)+xspeed + xv;
+        var bxv = bullSped*Math.cos(ang)+xspeed + xv;//calculate bullet vector
         var byv = bullSped*Math.sin(ang)+yspeed + yv;
-        var bullet = {
+        var bullet = {//construct bullet object
             x: tank.x+tank.width/2,
             y: tank.y+tank.height/2,
             xv: bxv,
@@ -262,10 +262,10 @@ function shoot(){
             size: bSize,
             damage: tank.damage
         };
-        bullets.push(bullet);
+        bullets.push(bullet);//add bullet to array of active bullets
     }
 }
-function reset(){
+function reset(){//resets player upon death
     tank.x = width/2 - tank.width/2;
     tank.y = width/2 - tank.height/2;
     tank.mag = 0;
@@ -300,7 +300,7 @@ function reset(){
     }
     points = 0;
 }
-function pursRes(){
+function pursRes(){//resets the enemy
     var side = Math.floor(Math.random()*4);
     switch(side){
         case 0:
@@ -325,36 +325,36 @@ function pursRes(){
     enemyHp *= 1.05;
     
 }
-function killPursuer(bullet){
+function killPursuer(bullet){//damage enemy
     if(bullet.x+bSize/2 > pursuer.x  && bullet.x-bSize/2 < pursuer.x + pursuer.width && bullet.y+bSize/2 > pursuer.y && bullet.y-bSize/2 < pursuer.y + pursuer.width ){
         pursuer.hp -= bullet.damage;
         return true;
     }
     return false;
 }
-function pMove(){
-    if(pursuer.hp <= 0){
+function pMove(){//enemy ai
+    if(pursuer.hp <= 0){//reset enemy upon death
         pursRes();
         pursuer.hp = enemyHp;
         points++;
         score.innerText = "Score: " + points;
     }
-    if(pursuer.x > tank.x && pursuer.y > tank.y &&  pursuer.x < tank.x + tank.width && pursuer.y < tank.y + tank.height){
+    if(pursuer.x > tank.x && pursuer.y > tank.y &&  pursuer.x < tank.x + tank.width && pursuer.y < tank.y + tank.height){//kills player on contact with pursuer
         reset();
     }
-    var vx = (tank.x + tank.width/2 - pursuer.width/2) - pursuer.x;
+    var vx = (tank.x + tank.width/2 - pursuer.width/2) - pursuer.x;//calculate vector to player
     var vy = (tank.y + tank.height/2 - pursuer.width/2) - pursuer.y;
-    var ang = Math.atan2(vx,vy);
-    while(ang<0){
+    var ang = Math.atan2(vx,vy);//calculate angle to player
+    while(ang<0){//keep angle positive
         ang+=2*Math.PI;
     }
     ang = Math.abs((Math.PI*2.55) - ang);
     pursuer.ang = ang;
-    pursuer.xv = pursuer.speed*Math.cos(pursuer.ang);
+    pursuer.xv = pursuer.speed*Math.cos(pursuer.ang);//move toward player
     pursuer.yv = pursuer.speed*Math.sin(pursuer.ang);
     pursuer.x += pursuer.xv;
     pursuer.y += pursuer.yv;
-    ctx.fillStyle = "#ff0000";
+    ctx.fillStyle = "#ff0000";//draw enemy
     ctx.fillRect(pursuer.x,pursuer.y,pursuer.width, pursuer.height);
     ctx.fillStyle = "#000000";
 }
@@ -363,7 +363,7 @@ function cMove(evt){
     mx = evt.offsetX*(canvas.width/min);
     my = evt.offsetY*(canvas.height/min);
 }
-function drawCross(){
+function drawCross(){//draws cursor
     ctx.fillStyle = "#aaaaaa";
     ctx.fillRect(mx-5,my+5,5,20);
     ctx.fillRect(mx-5,my-20,5,20);
